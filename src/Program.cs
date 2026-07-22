@@ -6,9 +6,15 @@ class Program
         {
             Console.Write("$ ");
             var command = Console.ReadLine()?.Trim();
-        
-            Console.WriteLine($"{command}: command not found");
-        }
 
+            switch (command)
+            {
+                case "exit":
+                    return;
+                default:
+                    Console.WriteLine($"{command}: command not found");
+                    break;
+            }
+        }
     }
 }
