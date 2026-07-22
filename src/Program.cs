@@ -5,14 +5,36 @@ class Program
         while (true)
         {
             Console.Write("$ ");
-            var command = Console.ReadLine()?.Trim();
+            var input = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                continue;
+            }
+            
+            // Handles many whitespaces
+            var inputArr = input.Split(' ', 
+                StringSplitOptions.RemoveEmptyEntries | 
+                StringSplitOptions.TrimEntries);
+
+            var command = inputArr[0];
+            var arguments = inputArr[1..];
 
             switch (command)
             {
                 case "exit":
-                    return;
+                    // Will implement the generic solution later
+                    if (arguments.Length == 0) return;
+                    Console.WriteLine($"{input}: too many arguments");
+                    break;
+                
+                case "echo":
+                    var echoContent = string.Join(" ", arguments);
+                    Console.WriteLine(echoContent);
+                    break;
+                
                 default:
-                    Console.WriteLine($"{command}: command not found");
+                    Console.WriteLine($"{input}: command not found");
                     break;
             }
         }
