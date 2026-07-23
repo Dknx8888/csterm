@@ -2,6 +2,8 @@ class Program
 {
     static void Main()
     {
+        string[] shellBuiltins = ["echo", "exit", "type"];
+        
         while (true)
         {
             Console.Write("$ ");
@@ -31,6 +33,15 @@ class Program
                 case "echo":
                     var echoContent = string.Join(" ", arguments);
                     Console.WriteLine(echoContent);
+                    break;
+                
+                case "type":
+                    foreach (var arg in arguments)
+                    {
+                        Console.WriteLine(shellBuiltins.Contains(arg)
+                            ? $"{arg} is a shell builtin"
+                            : $"{arg}: not found");
+                    }
                     break;
                 
                 default:
