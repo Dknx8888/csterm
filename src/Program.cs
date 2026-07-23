@@ -1,6 +1,6 @@
 class Program
 {
-    static void Main()
+    private static void Main()
     {
         string[] shellBuiltins = ["echo", "exit", "type"];
         var pathDirectories = Environment
@@ -56,7 +56,7 @@ class Program
                         foreach (var pathDir in pathDirectories)
                         {
                             var filePath = Path.Combine(pathDir, arg);
-                            if (File.Exists(filePath))
+                            if (File.Exists(filePath) && IsExecutable(filePath))
                             {
                                 executablePath = filePath;
                                 break;
@@ -76,5 +76,22 @@ class Program
                     break;
             }
         }
+    }
+
+    private static bool IsExecutable(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            return false;
+        }
+
+        // Not for Windows
+        var mode = File.GetUnixFileMode(filePath);
+
+        const UnixFileMode executePermissions = UnixFileMode.UserExecute |
+                                                UnixFileMode.GroupExecute |
+                                                UnixFileMode.OtherExecute;
+
+        return (mode & executePermissions) != 0;
     }
 }
