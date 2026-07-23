@@ -3,6 +3,13 @@ class Program
     static void Main()
     {
         string[] shellBuiltins = ["echo", "exit", "type"];
+        var pathDirectories = Environment
+            .GetEnvironmentVariable("PATH")?
+            .Split(
+                Path.PathSeparator,
+                StringSplitOptions.RemoveEmptyEntries |
+                StringSplitOptions.TrimEntries
+            ) ?? [];
         
         while (true)
         {
@@ -38,9 +45,29 @@ class Program
                 case "type":
                     foreach (var arg in arguments)
                     {
-                        Console.WriteLine(shellBuiltins.Contains(arg)
-                            ? $"{arg} is a shell builtin"
-                            : $"{arg}: not found");
+                        if (shellBuiltins.Contains(arg))
+                        {
+                            Console.WriteLine($"{arg} is a shell builtin");
+                            continue;
+                        }
+
+                        string? executablePath = null;
+
+                        foreach (var pathDir in pathDirectories)
+                        {
+                            var filePath = Path.Combine(pathDir, arg);
+                            if (File.Exists(filePath))
+                            {
+                                executablePath = filePath;
+                                break;
+                            }
+                        }
+                        
+                        Console.WriteLine(
+                            executablePath is not null
+                                ? $"{arg} is {executablePath}"
+                                : $"{arg}: not found"
+                            );
                     }
                     break;
                 
