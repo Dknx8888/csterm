@@ -15,6 +15,7 @@ public static class ExternalProgramRunner
         }
         catch (Win32Exception exception)
         {
+            // ReSharper disable once MethodHasAsyncOverload
             Console.Error.WriteLine($"{Path.GetFileName(execPath)}: {exception.Message}");
             return 1;
         }

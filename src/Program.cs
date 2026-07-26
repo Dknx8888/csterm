@@ -1,4 +1,4 @@
-using CodeCrafters.Shell;
+namespace CodeCrafters.Shell;
 
 class Program
 {
@@ -39,6 +39,11 @@ class Program
 
                 case "type":
                     TypeBuiltin.Execute(arguments, shellBuiltins);
+                    break;
+                
+                case "pwd":
+                    var currentPath = Directory.GetCurrentDirectory();
+                    Console.WriteLine(currentPath);
                     break;
 
                 default:
