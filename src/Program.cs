@@ -53,14 +53,7 @@ class Program
                     }
                     else
                     {
-                        try
-                        {
-                            Directory.SetCurrentDirectory(arguments[0]);
-                        }
-                        catch
-                        {
-                            Console.WriteLine($"cd: {arguments[0]}: No such file or directory");
-                        }
+                        ChangeDirectoryBuiltin.Execute(arguments[0]);
                     }
                     break;
 
