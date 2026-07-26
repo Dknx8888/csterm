@@ -4,7 +4,7 @@ class Program
 {
     private static async Task Main()
     {
-        string[] shellBuiltins = ["echo", "exit", "type"];
+        string[] shellBuiltins = ["echo", "exit", "type", "pwd"];
         
         while (true)
         {
