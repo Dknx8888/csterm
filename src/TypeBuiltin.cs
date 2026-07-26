@@ -2,7 +2,7 @@ namespace CodeCrafters.Shell;
 
 public static class TypeBuiltin
 {
-    public static void Execute(string[] arguments, string[] shellBuiltins)
+    public static void Execute(string[] arguments, HashSet<string> shellBuiltins)
     {
         foreach (var arg in arguments)
         {

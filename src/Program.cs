@@ -4,7 +4,7 @@ class Program
 {
     private static async Task Main()
     {
-        string[] shellBuiltins = ["echo", "exit", "type", "pwd"];
+        HashSet<string> shellBuiltins = ["echo", "exit", "type", "pwd", "cd"];
         
         while (true)
         {
@@ -44,6 +44,24 @@ class Program
                 case "pwd":
                     var currentPath = Directory.GetCurrentDirectory();
                     Console.WriteLine(currentPath);
+                    break;
+                
+                case "cd":
+                    if (arguments.Length > 1)
+                    {
+                        Console.WriteLine($"{input}: too many arguments");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Directory.SetCurrentDirectory(arguments[0]);
+                        }
+                        catch
+                        {
+                            Console.WriteLine($"cd: {arguments[0]}: No such file or directory");
+                        }
+                    }
                     break;
 
                 default:
