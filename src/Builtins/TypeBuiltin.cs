@@ -1,4 +1,4 @@
-namespace CodeCrafters.Shell;
+namespace CodeCrafters.Shell.Builtins;
 
 public static class TypeBuiltin
 {

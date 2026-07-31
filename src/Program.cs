@@ -1,3 +1,6 @@
+using CodeCrafters.Shell.Builtins;
+using CodeCrafters.Shell.Helpers;
+
 namespace CodeCrafters.Shell;
 
 class Program
@@ -15,15 +18,22 @@ class Program
             {
                 continue;
             }
-            
-            // Handles many whitespaces
-            var inputArr = input.Split(' ', 
-                StringSplitOptions.RemoveEmptyEntries | 
-                StringSplitOptions.TrimEntries);
+
+            string[] inputArr;
+
+            try
+            {
+                inputArr = ParseInput.Parse(input);
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+                continue;
+            }
 
             var command = inputArr[0];
             var arguments = inputArr[1..];
-
+            
             switch (command)
             {
                 case "exit":
@@ -33,8 +43,7 @@ class Program
                     break;
 
                 case "echo":
-                    var echoContent = string.Join(" ", arguments);
-                    Console.WriteLine(echoContent);
+                    EchoBuiltin.Execute(arguments);
                     break;
 
                 case "type":
