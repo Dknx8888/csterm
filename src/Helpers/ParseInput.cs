@@ -6,6 +6,7 @@ public static class ParseInput
 {
     private const char SingleQuote = '\'';
     private const char DoubleQuote = '\"';
+    private const char Backslash = '\\';
     
     public static string[] Parse(string input)
     {
@@ -16,22 +17,37 @@ public static class ParseInput
         var insideDoubleQuotes = false;
         var partStarted = false;
 
-        foreach (var c in input)
+        for (var i = 0; i < input.Length; i++)
         {
-            if (c == DoubleQuote && !insideSingleQuotes)
-            {
-                insideDoubleQuotes = !insideDoubleQuotes;
-                partStarted = true;
-                continue;
-            }
+            var c = input[i];
             
-            if (c == SingleQuote && !insideDoubleQuotes)
+            switch (c)
             {
-                insideSingleQuotes = !insideSingleQuotes; // Flip for start and end quotes
-                partStarted = true;
-                continue;
+                case Backslash when !insideDoubleQuotes && !insideSingleQuotes:
+                {
+                    if (i + 1 >= input.Length)
+                    {
+                        throw new FormatException("Backslash must be followed by another character");
+                    }
+
+                    var escapedChar = input[++i];
+
+                    currentPart.Append(escapedChar);
+                    partStarted = true;
+                    continue;
+                }
+                
+                case DoubleQuote when !insideSingleQuotes:
+                    insideDoubleQuotes = !insideDoubleQuotes;
+                    partStarted = true;
+                    continue;
+                
+                case SingleQuote when !insideDoubleQuotes:
+                    insideSingleQuotes = !insideSingleQuotes; // Flip for start and end quotes
+                    partStarted = true;
+                    continue;
             }
-            
+
             // Meets white space that is not inside '' or "" => one new arg => to parts
             if (char.IsWhiteSpace(c) && !insideSingleQuotes && !insideDoubleQuotes)
             {
@@ -43,7 +59,7 @@ public static class ParseInput
                 }
                 continue;
             }
-
+            
             currentPart.Append(c); // Append each normal char to the part until end single quote or space
             partStarted = true;
         }
