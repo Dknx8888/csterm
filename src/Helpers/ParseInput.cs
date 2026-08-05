@@ -7,7 +7,9 @@ public static class ParseInput
     private const char SingleQuote = '\'';
     private const char DoubleQuote = '\"';
     private const char Backslash = '\\';
-    
+
+    private static readonly HashSet<char> EscapingCharsInDoubleQuote = ['\"', '\\', '$', '`', '\n'];
+
     public static string[] Parse(string input)
     {
         var parts = new List<string>(); // parts = [command, arg1, arg2, ...]
@@ -23,16 +25,26 @@ public static class ParseInput
             
             switch (c)
             {
-                case Backslash when !insideDoubleQuotes && !insideSingleQuotes:
+                case Backslash when !insideSingleQuotes:
                 {
                     if (i + 1 >= input.Length)
                     {
                         throw new FormatException("Backslash must be followed by another character");
                     }
+                    
+                    var nextChar = input[++i];
 
-                    var escapedChar = input[++i];
+                    if (!insideDoubleQuotes || EscapingCharsInDoubleQuote.Contains(nextChar))
+                    {
+                        currentPart.Append(nextChar);
+                    }
+                    else
+                    {
+                        // Inside double q, \ is literal
+                        currentPart.Append(Backslash);
+                        currentPart.Append(nextChar);
+                    }
 
-                    currentPart.Append(escapedChar);
                     partStarted = true;
                     continue;
                 }
